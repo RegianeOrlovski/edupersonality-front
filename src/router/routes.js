@@ -79,21 +79,21 @@ const strategies = [
     name: 'strategies',
     component: () => import('pages/Strategies/StrategiesList.vue'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.STRATEGIES }
+    meta: { ability: ABILITIES.VIEW_STRATEGIES }
   },
   {
     path: '/strategies/create',
     name: 'strategy_create',
     component: () => import('pages/Strategies/StrategyForm.vue'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.STRATEGIES }
+    meta: { ability: ABILITIES.REGISTER_STRATEGIES }
   },
   {
     path: '/strategies/update/:id',
     name: 'strategy_update',
     component: () => import('pages/Strategies/StrategyForm.vue'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.STRATEGIES }
+    meta: { ability: ABILITIES.VIEW_STRATEGIES }
   }
 ]
 

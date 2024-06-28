@@ -24,7 +24,7 @@ const generalItems = [
     to: {
       name: 'strategies'
     },
-    ability: ABILITIES.STRATEGIES
+    ability: ABILITIES.VIEW_STRATEGIES
   },
   {
     label: 'Acesso ao Sistema',

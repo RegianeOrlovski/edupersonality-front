@@ -2,7 +2,8 @@ export default {
   permissions: {
     users: 'Usuários',
     permissions: 'Permissões',
-    strategies: 'Estratégias de ensino',
+    register_strategies: 'Cadastrar estratégias de ensino',
+    view_strategies: 'Visualizar estratégias de ensino',
   },
   user: {
     role: {
@@ -95,8 +96,7 @@ export default {
   activities_placeholder: "Atividades que compõem a estratégia de ensino",
   applied_resources: "Recursos aplicados",
   applied_resources_placeholder: "vídeos, leituras, simulações, pesquisas, teorias...",
-  course: "Curso",
-  discipline: "Disciplina",
+  reference: "Referência bibliográfica",
   continue: "Proseguir",
   infer: "Inferir",
   inferred_strategy: "Estratégia inferida",

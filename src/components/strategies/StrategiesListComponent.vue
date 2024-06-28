@@ -22,6 +22,7 @@
           </div>
           <div class="col">
             <q-btn
+              v-if="canRegister"
               icon="add"
               class="float-right"
               :label="t('register')"
@@ -70,7 +71,8 @@ import { onMounted, ref } from 'vue'
 import { getStrategies, destroyStrategy } from 'src/services/strategies/strategies-api'
 import { t } from 'src/services/utils/i18n'
 import { Notify, Dialog } from 'quasar'
-import { loggedUser } from "boot/user"
+import { checkIfLoggedUserHasAbility, loggedUser } from "boot/user"
+import { ABILITIES } from "src/constants/abilities";
 
 let strategiesData = ref([])
 let loading = ref(false)
@@ -105,7 +107,10 @@ const columns = [
   },
 ]
 
+const canRegister = ref(false)
+
 onMounted(async () => {
+  canRegister.value = checkIfLoggedUserHasAbility(ABILITIES.REGISTER_STRATEGIES)
   await getStrategiesFunction()
 })
 

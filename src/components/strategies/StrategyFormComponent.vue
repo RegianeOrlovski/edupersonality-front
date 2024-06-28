@@ -36,7 +36,7 @@
             :label="t('focus')"
             v-model="strategy.focus"
             hide-bottom-space
-            class="col-xs-12 col-md-"
+            class="col-xs-12"
             dense
             outlined
             :readonly="!!strategy.id"
@@ -50,7 +50,7 @@
             v-model="strategy.characteristics"
             hide-bottom-space
             dense
-            class="col-xs-12 col-md-"
+            class="col-xs-12"
             outlined
             :readonly="!!strategy.id"
             autogrow
@@ -62,7 +62,7 @@
             v-model="strategy.activities"
             hide-bottom-space
             dense
-            class="col-xs-12 col-md-"
+            class="col-xs-12"
             outlined
             :readonly="!!strategy.id"
             autogrow
@@ -74,7 +74,7 @@
             v-model="strategy.applied_resources"
             hide-bottom-space
             dense
-            class="col-xs-12 col-md-"
+            class="col-xs-12"
             outlined
             :readonly="!!strategy.id"
             autogrow
@@ -82,22 +82,14 @@
             :rules="[val => !!val || t('mandatory_completion')]"
           />
           <q-input
-            :label="t('course')"
-            v-model="strategy.course"
+            :label="t('reference')"
+            v-model="strategy.reference"
             hide-bottom-space
-            class="col-xs-12 col-md-6"
+            class="col-xs-12"
             dense
             outlined
             :readonly="!!strategy.id"
-          />
-          <q-input
-            :label="t('discipline')"
-            v-model="strategy.discipline"
-            hide-bottom-space
-            class="col-xs-12 col-md-6"
-            dense
-            outlined
-            :readonly="!!strategy.id"
+            :rules="[val => !!val || t('mandatory_completion')]"
           />
         </div>
       </div>
@@ -148,7 +140,7 @@
             v-model="dichotomyAnswers[dichotomy.answerKey][categoryIndex]"
             :val="value"
             :label="t(`${dichotomy.dichotomy}.` + getAnswerLabelToTranslate(categoryIndex + 1, value))"
-            :disable="!!dichotomyAnswers.id || categoryIndex >= 2 && (!dichotomyAnswers[dichotomy.answerKey][0] || !dichotomyAnswers[dichotomy.answerKey][1])"
+            :disable="!canRegister || !!dichotomyAnswers.id || categoryIndex >= 2 && (!dichotomyAnswers[dichotomy.answerKey][0] || !dichotomyAnswers[dichotomy.answerKey][1])"
           />
         </div>
       </div>
@@ -195,6 +187,8 @@ import { Notify, Loading } from "quasar"
 import { formatResponseError } from "src/services/utils/error-formatter"
 import { t } from "src/services/utils/i18n"
 import { createDichotomyAnswer } from "src/services/dichotomy_answers/dichotomy-answers-api";
+import { checkIfLoggedUserHasAbility } from "boot/user";
+import { ABILITIES } from "src/constants/abilities";
 
 const router = useRouter()
 const route = useRoute()
@@ -207,14 +201,15 @@ const dichotomyAnswersForm = ref(null)
 const answers = ref(null)
 const results = ref(null)
 
+const canRegister = ref(false)
+
 const strategy = ref({
   name: null,
   focus: null,
   characteristics: null,
   activities: null,
   applied_resources: null,
-  discipline: null,
-  course: null,
+  reference: null,
 })
 
 const dichotomyAnswers = ref({
@@ -252,10 +247,12 @@ onMounted(async () => {
   if (route.params.id) {
     await getStrategyFunction()
   }
+
+  canRegister.value = checkIfLoggedUserHasAbility(ABILITIES.REGISTER_STRATEGIES)
 })
 
 async function saveStrategy() {
-  if (route.params.id) {
+  if (route.params.id || !canRegister.value) {
     return
   }
 
@@ -300,7 +297,7 @@ async function getStrategyFunction() {
 }
 
 async function saveDichotomyAnswers() {
-  if (dichotomyAnswers.value.id) {
+  if (dichotomyAnswers.value.id || !canRegister.value) {
     return
   }
 
