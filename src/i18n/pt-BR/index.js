@@ -17,6 +17,7 @@ export default {
       blocked_by_time: 'Bloqueado por tempo',
     }
   },
+  edit: 'Editar',
   more_details: 'Mais detalhes',
   confirm_remove: 'Confirma a exclusão?',
   removed_successfully: 'Excluído com sucesso!',

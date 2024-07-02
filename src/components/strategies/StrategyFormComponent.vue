@@ -28,7 +28,7 @@
             class="col-xs-12"
             dense
             outlined
-            :readonly="!!strategy.id"
+            :readonly="!!strategy.id && !editDescriptions"
             :placeholder="t('strategy_name_placeholder')"
             :rules="[val => !!val || t('mandatory_completion')]"
           />
@@ -39,7 +39,7 @@
             class="col-xs-12"
             dense
             outlined
-            :readonly="!!strategy.id"
+            :readonly="!!strategy.id && !editDescriptions"
             type="textarea"
             autogrow
             :placeholder="t('focus_placeholder')"
@@ -52,7 +52,7 @@
             dense
             class="col-xs-12"
             outlined
-            :readonly="!!strategy.id"
+            :readonly="!!strategy.id && !editDescriptions"
             autogrow
             :placeholder="t('characteristics_placeholder')"
             :rules="[val => !!val || t('mandatory_completion')]"
@@ -64,7 +64,7 @@
             dense
             class="col-xs-12"
             outlined
-            :readonly="!!strategy.id"
+            :readonly="!!strategy.id && !editDescriptions"
             autogrow
             :placeholder="t('activities_placeholder')"
             :rules="[val => !!val || t('mandatory_completion')]"
@@ -76,7 +76,7 @@
             dense
             class="col-xs-12"
             outlined
-            :readonly="!!strategy.id"
+            :readonly="!!strategy.id && !editDescriptions"
             autogrow
             :placeholder="t('applied_resources_placeholder')"
             :rules="[val => !!val || t('mandatory_completion')]"
@@ -88,21 +88,31 @@
             class="col-xs-12"
             dense
             outlined
-            :readonly="!!strategy.id"
+            :readonly="!!strategy.id && !editDescriptions"
             :rules="[val => !!val || t('mandatory_completion')]"
           />
         </div>
       </div>
 
-      <div v-if="!strategy.id" class="q-mt-md text-right">
+      <div class="q-mt-md text-right">
         <q-btn
+          v-if="!strategy.id || editDescriptions"
           outline
-          :label="t('continue')"
-          icon="arrow_forward"
+          :label="t(!strategy.id ? 'continue': 'save')"
+          :icon="!strategy.id ? 'arrow_forward': 'save'"
           type="submit"
           color="primary"
           :disable="savingStrategy"
           :loading="savingStrategy"
+        />
+        <q-btn
+          v-if="!!strategy.id && !editDescriptions && canRegister"
+          outline
+          :label="t('edit')"
+          icon="edit"
+          type="button"
+          color="primary"
+          @click="editDescriptions = true"
         />
       </div>
     </q-form>
@@ -117,8 +127,20 @@
       ref="dichotomyAnswersForm"
       @submit="saveDichotomyAnswers()"
     >
+      <div class="q-mt-lg text-right">
+        <q-btn
+          v-if="!!dichotomyAnswers.id && !editAnswers && canRegister"
+          outline
+          :label="t('edit')"
+          icon="edit"
+          type="button"
+          color="primary"
+          @click="editAnswers = true"
+        />
+      </div>
+
       <div
-        class="q-mt-lg"
+        class="q-mt-md"
         v-for="(dichotomy, dichotomyIndex) in dichotomyAnswersMapping"
         :key="`dichotomy-${dichotomyIndex}`"
       >
@@ -140,13 +162,14 @@
             v-model="dichotomyAnswers[dichotomy.answerKey][categoryIndex]"
             :val="value"
             :label="t(`${dichotomy.dichotomy}.` + getAnswerLabelToTranslate(categoryIndex + 1, value))"
-            :disable="!canRegister || !!dichotomyAnswers.id || categoryIndex >= 2 && (!dichotomyAnswers[dichotomy.answerKey][0] || !dichotomyAnswers[dichotomy.answerKey][1])"
+            :disable="!canRegister || (!!dichotomyAnswers.id && !editAnswers) || categoryIndex >= 2 && (!dichotomyAnswers[dichotomy.answerKey][0] || !dichotomyAnswers[dichotomy.answerKey][1])"
           />
         </div>
       </div>
 
-      <div v-if="!dichotomyAnswers.id" class="q-mt-md text-right">
+      <div class="q-mt-md text-right">
         <q-btn
+          v-if="!dichotomyAnswers.id || editAnswers"
           outline
           :label="t('infer')"
           icon="bolt"
@@ -160,7 +183,7 @@
   </div>
 
   <div ref="results">
-    <div v-if="strategy.id && dichotomyAnswers.id">
+    <div v-if="strategy.id && dichotomyAnswers.id && !editAnswers">
       <q-separator class="q-mt-lg q-mb-lg" />
       <div class="text-h5 q-mb-md">{{ t("results") }}</div>
       <div v-if="strategy.personalities?.length" class="text-bold q-mt-md">{{ t("strategy_personalities") }}</div>
@@ -186,8 +209,8 @@ import { createStrategy, getStrategy, updateStrategy } from "src/services/strate
 import { Notify, Loading } from "quasar"
 import { formatResponseError } from "src/services/utils/error-formatter"
 import { t } from "src/services/utils/i18n"
-import { createDichotomyAnswer } from "src/services/dichotomy_answers/dichotomy-answers-api";
-import { checkIfLoggedUserHasAbility } from "boot/user";
+import { createDichotomyAnswer, updateDichotomyAnswer } from "src/services/dichotomy_answers/dichotomy-answers-api";
+import { checkIfLoggedUserHasAbility, loggedUser } from "boot/user";
 import { ABILITIES } from "src/constants/abilities";
 
 const router = useRouter()
@@ -202,6 +225,8 @@ const answers = ref(null)
 const results = ref(null)
 
 const canRegister = ref(false)
+const editDescriptions = ref(false)
+const editAnswers = ref(false)
 
 const strategy = ref({
   name: null,
@@ -252,7 +277,7 @@ onMounted(async () => {
 })
 
 async function saveStrategy() {
-  if (route.params.id || !canRegister.value) {
+  if (!canRegister.value) {
     return
   }
 
@@ -261,7 +286,13 @@ async function saveStrategy() {
     const validated = await strategyForm.value.validate()
     if (validated) {
       const strategyToSave = { ...strategy.value }
-      strategy.value = await createStrategy(strategyToSave)
+      if (route.params.id) {
+        strategy.value = await updateStrategy(route.params.id, strategyToSave)
+      } else {
+        strategy.value = await createStrategy(strategyToSave)
+      }
+
+      editDescriptions.value = false;
 
       setTimeout(() => {
         answers.value?.scrollIntoView({ behavior: 'smooth' })
@@ -297,7 +328,7 @@ async function getStrategyFunction() {
 }
 
 async function saveDichotomyAnswers() {
-  if (dichotomyAnswers.value.id || !canRegister.value) {
+  if (!canRegister.value) {
     return
   }
 
@@ -307,7 +338,14 @@ async function saveDichotomyAnswers() {
     if (validated) {
       const dichotomyAnswersToSave = { ...dichotomyAnswers.value }
       dichotomyAnswersToSave.strategy_id = strategy.value.id
-      dichotomyAnswers.value = await createDichotomyAnswer(dichotomyAnswersToSave)
+
+      if (dichotomyAnswers.value.id) {
+        dichotomyAnswers.value = await updateDichotomyAnswer(dichotomyAnswers.value.id, dichotomyAnswersToSave)
+      } else {
+        dichotomyAnswers.value = await createDichotomyAnswer(dichotomyAnswersToSave)
+      }
+
+      editAnswers.value = false
 
       Notify.create({
         message: t('inferred_strategy'),
