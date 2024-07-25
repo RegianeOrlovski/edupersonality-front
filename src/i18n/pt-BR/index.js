@@ -4,6 +4,7 @@ export default {
     permissions: 'Permissões',
     register_strategies: 'Cadastrar estratégias de ensino',
     view_strategies: 'Visualizar estratégias de ensino',
+    calc_strategies: 'Cálculo de estratégias',
   },
   user: {
     role: {
@@ -48,7 +49,7 @@ export default {
   observation: 'Observação',
   select_or_drag_files: "Clique para selecionar ou arraste arquivos aqui",
   mandatory_completion: 'Preenchimento obrigatório',
-  strategies: 'Esratégias de ensino',
+  strategies: 'Estratégias de ensino',
   inactive: 'Inativo',
   business_name: 'Nome',
   corporate_name: 'Razão social',
@@ -105,7 +106,13 @@ export default {
   strategy_personalities: "A estratégia é adequada para as seguintes personalidades:",
   no_strategy_personalities: "A estratégia é adequada para nenhuma personalidade.",
   compatible_personalities: "Personalidades compatíveis",
-  personalities: "{quantity} Personalidades",
+  personalities_quantity: "{quantity} Personalidades",
+  personalities: "Personalidades",
+  strategies_calc: "Cálculo de estratégias",
+  strategies_x_personalities_calc: "Cálculo de Estratégias x Personalidades",
+  selected_compatible_personalities: "Personalidades compatíveis selecionadas",
+  strategy_name: "Nome da estratégia",
+  no_content: "Nenhum conteúdo",
   // Dichotomy EI
   ei: {
     dichotomy: "Dicotomias Extroversão (E) e Introversão (I)",

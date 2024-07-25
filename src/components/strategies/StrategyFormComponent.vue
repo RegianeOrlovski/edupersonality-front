@@ -91,6 +91,21 @@
             :readonly="!!strategy.id && !editDescriptions"
             :rules="[val => !!val || t('mandatory_completion')]"
           />
+          <div class="col-xs-12">
+            <q-card
+              v-if="!!strategy.id && !editDescriptions"
+              flat
+              bordered
+            >
+              <q-card-section v-html="strategy.description || t('no_content')" />
+            </q-card>
+            <q-editor
+              v-else
+              v-model="strategy.description"
+              min-height="5rem"
+              :toolbar="toolbar"
+            />
+          </div>
         </div>
       </div>
 
@@ -106,7 +121,7 @@
           :loading="savingStrategy"
         />
         <q-btn
-          v-if="!!strategy.id && !editDescriptions && canRegister"
+          v-if="!!strategy.id && !editDescriptions && canRegister && strategy.user_id === loggedUser.id"
           outline
           :label="t('edit')"
           icon="edit"
@@ -129,7 +144,7 @@
     >
       <div class="q-mt-lg text-right">
         <q-btn
-          v-if="!!dichotomyAnswers.id && !editAnswers && canRegister"
+          v-if="!!dichotomyAnswers.id && !editAnswers && canRegister && strategy.user_id === loggedUser.id"
           outline
           :label="t('edit')"
           icon="edit"
@@ -169,7 +184,7 @@
 
       <div class="q-mt-md text-right">
         <q-btn
-          v-if="!dichotomyAnswers.id || editAnswers"
+          v-if="(!dichotomyAnswers.id || editAnswers) && strategy.user_id === loggedUser.id"
           outline
           :label="t('infer')"
           icon="bolt"
@@ -235,6 +250,7 @@ const strategy = ref({
   activities: null,
   applied_resources: null,
   reference: null,
+  description: null,
 })
 
 const dichotomyAnswers = ref({
@@ -244,6 +260,32 @@ const dichotomyAnswers = ref({
   dichotomy_tf: [null, null, null, null],
   dichotomy_jp: [null, null, null, null],
 })
+
+const toolbar = [
+  [ 'bold', 'italic', 'strike', 'underline', 'subscript', 'superscript', 'removeFormat' ],
+  [
+    {
+      label: 'Alinhamento',
+      icon: 'format_align_left',
+      fixedLabel: true,
+      options: ['left', 'center', 'right', 'justify']
+    },
+    {
+      label: 'Formatação',
+      icon: 'title',
+      list: 'no-icons',
+      options: [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ]
+    },
+    {
+      label: 'Tamanho',
+      icon: 'text_fields',
+      list: 'no-icons',
+      options: [ 'size-1', 'size-2', 'size-3', 'size-4', 'size-5', 'size-6', 'size-7' ]
+    },
+  ],
+  ['unordered', 'ordered', 'quote', 'hr', 'link'],
+  ['undo', 'redo', 'fullscreen']
+]
 
 const dichotomyAnswersMapping = [
   {

@@ -82,6 +82,13 @@ const strategies = [
     meta: { ability: ABILITIES.VIEW_STRATEGIES }
   },
   {
+    path: '/strategies/calc',
+    name: 'strategies_calc',
+    component: () => import('pages/Strategies/StrategiesCalc.vue'),
+    beforeEnter: checkLoggedUserAbility,
+    meta: { ability: ABILITIES.CALC_STRATEGIES }
+  },
+  {
     path: '/strategies/create',
     name: 'strategy_create',
     component: () => import('pages/Strategies/StrategyForm.vue'),

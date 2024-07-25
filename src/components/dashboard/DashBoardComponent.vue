@@ -48,6 +48,7 @@
 
       <q-card-actions class="row justify-between">
         <q-btn
+          v-if="canViewStrategies"
           flat
           color="primary"
           :to="{ name: 'strategy_update', params: { 'id': strategyToShow.id } }"
@@ -65,6 +66,8 @@ import { t } from 'src/services/utils/i18n'
 import { onMounted, ref } from "vue";
 import { getStrategies } from "src/services/strategies/strategies-api";
 import { Notify } from "quasar";
+import { checkIfLoggedUserHasAbility } from "boot/user";
+import { ABILITIES } from "src/constants/abilities";
 
 const data = ref([
   { personality: 'ESFJ', list: [], label: 'ESFJ - ' + t('all_personalities.ESFJ'), bgColor: 'blue-1', textColor: 'blue-8', icon: 'menu_book' },
@@ -97,7 +100,10 @@ const mainPagination = ref({
   rowsNumber: 0,
 })
 
+const canViewStrategies = ref(false)
+
 onMounted(async () => {
+  canViewStrategies.value = checkIfLoggedUserHasAbility(ABILITIES.VIEW_STRATEGIES)
   await getStrategiesFunction()
 })
 

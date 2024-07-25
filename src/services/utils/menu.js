@@ -27,6 +27,14 @@ const generalItems = [
     ability: ABILITIES.VIEW_STRATEGIES
   },
   {
+    label: 'Cálculo de estratégias',
+    icon: 'o_sort',
+    to: {
+      name: 'strategies_calc'
+    },
+    ability: ABILITIES.CALC_STRATEGIES
+  },
+  {
     label: 'Acesso ao Sistema',
     icon: 'o_manage_accounts',
     children: [

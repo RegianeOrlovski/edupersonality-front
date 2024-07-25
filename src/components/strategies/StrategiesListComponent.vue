@@ -96,7 +96,7 @@ const columns = [
     label: t('compatible_personalities'),
     align: 'left',
     field: 'personalities',
-    format: val => t('personalities', {quantity: (val?.length || 0)}),
+    format: val => t('personalities_quantity', {quantity: (val?.length || 0)}),
   },
   {
     name: 'actions',
