@@ -115,6 +115,8 @@ export default {
   no_content: "Nenhum conteúdo",
   image_upload_completed: "Imagem salva com sucesso",
   image: "Imagem",
+  define_image: "Definir imagem",
+  steps_for_application: "Etapas para aplicação",
   // Dichotomy EI
   ei: {
     dichotomy: "Dicotomias Extroversão (E) e Introversão (I)",

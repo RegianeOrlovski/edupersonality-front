@@ -92,6 +92,10 @@
             :rules="[val => !!val || t('mandatory_completion')]"
           />
 
+          <div class="col-xs-12 text-h6">
+            {{ t("steps_for_application") }}
+          </div>
+
           <div class="col-xs-12">
             <q-uploader
               v-if="!!strategy.id && editDescriptions"
@@ -117,6 +121,15 @@
               loading="lazy"
               spinner-color="white"
               alt="image"
+            />
+            <q-btn
+              v-if="!!strategy.id && !strategy.image && !editDescriptions && canRegister && strategy.user_id === loggedUser.id"
+              outline
+              icon="edit"
+              type="button"
+              color="primary"
+              :label="t('define_image')"
+              @click="editDescriptions = true"
             />
           </div>
 
