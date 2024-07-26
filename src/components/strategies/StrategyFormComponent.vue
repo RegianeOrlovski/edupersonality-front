@@ -91,6 +91,35 @@
             :readonly="!!strategy.id && !editDescriptions"
             :rules="[val => !!val || t('mandatory_completion')]"
           />
+
+          <div class="col-xs-12">
+            <q-uploader
+              v-if="!!strategy.id && editDescriptions"
+              dense
+              hide-bottom-space
+              max-file-size="3000000"
+              field-name="image"
+              :url="`${uploadURL}/strategies/${strategy.id}/image`"
+              :headers="[{name: 'Authorization', value: userToken()}]"
+              :label="t('image')"
+              class="full-width q-mb-md"
+              no-thumbnails
+              auto-upload
+              color="primary"
+              accept=".png, .jpg, .jpeg"
+              @uploaded="handleUploadSuccess"
+              @failed="handleUploadFail"
+            />
+            <q-img
+              class="rounded-borders q-card--bordered full-width"
+              v-if="!!strategy.image"
+              :src="strategy.image"
+              loading="lazy"
+              spinner-color="white"
+              alt="image"
+            />
+          </div>
+
           <div class="col-xs-12">
             <q-card
               v-if="!!strategy.id && !editDescriptions"
@@ -227,6 +256,9 @@ import { t } from "src/services/utils/i18n"
 import { createDichotomyAnswer, updateDichotomyAnswer } from "src/services/dichotomy_answers/dichotomy-answers-api";
 import { checkIfLoggedUserHasAbility, loggedUser } from "boot/user";
 import { ABILITIES } from "src/constants/abilities";
+import { userToken } from "src/services/utils/local-storage";
+
+const uploadURL = process.env.API_URL
 
 const router = useRouter()
 const route = useRoute()
@@ -421,5 +453,33 @@ function getAnswerLabelToTranslate(category, value) {
   }
 
   return `category_${category}_answer_${valueLabel}`
+}
+
+function handleUploadSuccess({xhr}) {
+  if (!!xhr.response) {
+    strategy.value.image = JSON.parse(xhr.response)?.image
+  }
+
+  Notify.create({
+    message: t('image_upload_completed'),
+    type: 'positive'
+  })
+}
+
+function handleUploadFail(error) {
+  let response = null;
+
+  try {
+    response = JSON.parse(error.xhr?.responseText || null);
+  } catch {
+    //
+  }
+
+  const message = response?.message || t('unexpected_error')
+
+  Notify.create({
+    message,
+    type: 'negative'
+  })
 }
 </script>

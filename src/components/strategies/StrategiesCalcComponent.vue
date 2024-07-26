@@ -57,22 +57,27 @@
   </q-table>
 
   <q-dialog v-model="show">
-    <q-card style="width: 700px; max-width: 80vw;">
+    <q-card style="width: 1200px; max-width: 95vw;">
       <q-card-section>
         <div class="text-h6">{{ strategyToShow.name }}</div>
       </q-card-section>
 
+      <q-card-section v-if="!!strategyToShow.image">
+        <q-img
+          class="full-width"
+          :src="strategyToShow.image"
+          loading="lazy"
+          spinner-color="white"
+          alt="image"
+        />
+      </q-card-section>
+
       <q-card-section v-html="strategyToShow.description || t('no_content')" />
 
-      <q-card-actions class="row justify-between">
-        <q-btn
-          v-if="canViewStrategies"
-          flat
-          color="primary"
-          :to="{ name: 'strategy_update', params: { 'id': strategyToShow.id } }"
-          :label="t('more_details')"
-        />
-        <q-btn flat label="OK" color="primary" v-close-popup />
+      <q-card-actions>
+        <div class="full-width text-right">
+          <q-btn flat label="OK" color="primary" v-close-popup />
+        </div>
       </q-card-actions>
     </q-card>
   </q-dialog>

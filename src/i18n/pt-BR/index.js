@@ -113,6 +113,8 @@ export default {
   selected_compatible_personalities: "Personalidades compatíveis selecionadas",
   strategy_name: "Nome da estratégia",
   no_content: "Nenhum conteúdo",
+  image_upload_completed: "Imagem salva com sucesso",
+  image: "Imagem",
   // Dichotomy EI
   ei: {
     dichotomy: "Dicotomias Extroversão (E) e Introversão (I)",
