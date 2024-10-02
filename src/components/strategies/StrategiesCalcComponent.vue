@@ -38,6 +38,30 @@
         </div>
       </div>
     </template>
+    <template v-slot:header-cell-name="props">
+      <q-th key="name" :props="props">
+        {{props.col.label}}
+        <q-icon
+          name="o_info"
+          size="xs"
+        />
+        <q-tooltip :offset="[5, 5]">
+          {{ t('click_to_sort') }}
+        </q-tooltip>
+      </q-th>
+    </template>
+    <template v-slot:header-cell-personalities="props">
+      <q-th key="personalities" :props="props">
+        {{props.col.label}}
+        <q-icon
+          name="o_info"
+          size="xs"
+        />
+        <q-tooltip :offset="[5, 5]">
+          {{ t('click_to_sort') }}
+        </q-tooltip>
+      </q-th>
+    </template>
     <template v-slot:body-cell-actions="props">
       <q-td key="actions" :props="props">
         <q-btn-group outline>

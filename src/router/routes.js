@@ -1,29 +1,29 @@
-import { checkIfLoggedUserHasAbility } from "boot/user";
-import { ABILITIES } from "src/constants/abilities";
+import { checkIfLoggedUserHasAbility } from 'boot/user';
+import { ABILITIES } from 'src/constants/abilities';
 
 const redirectToDashboardIfLogged = (to, from, next) => {
   if (localStorage.getItem('isUserLogged')) {
-    next('/')
+    next('/');
   } else {
-    next()
+    next();
   }
-}
+};
 
 const redirectToLoginIfNotLogged = (to, from, next) => {
   if (localStorage.getItem('isUserLogged')) {
-    next()
+    next();
   } else {
-    next('/login')
+    next('/login');
   }
-}
+};
 
 const checkLoggedUserAbility = (to, from, next) => {
   if (checkIfLoggedUserHasAbility(to.meta.ability)) {
-    next()
+    next();
   } else {
-    next('/')
+    next('/');
   }
-}
+};
 
 const permissions = [
   {
@@ -31,23 +31,23 @@ const permissions = [
     name: 'permissions',
     component: () => import('pages/Permissions/PermissionsList'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.PERMISSIONS }
+    meta: { ability: ABILITIES.PERMISSIONS },
   },
   {
     path: '/permissions/create',
     name: 'permissions_create',
     component: () => import('pages/Permissions/PermissionsForm'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.PERMISSIONS }
+    meta: { ability: ABILITIES.PERMISSIONS },
   },
   {
     path: '/permissions/update/:id',
     name: 'permissions_update',
     component: () => import('pages/Permissions/PermissionsForm'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.PERMISSIONS }
-  }
-]
+    meta: { ability: ABILITIES.PERMISSIONS },
+  },
+];
 
 const users = [
   {
@@ -55,23 +55,23 @@ const users = [
     name: 'users',
     component: () => import('pages/Users/UsersList'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.USERS }
+    meta: { ability: ABILITIES.USERS },
   },
   {
     path: '/users/create',
     name: 'users_create',
     component: () => import('pages/Users/UsersForm'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.USERS }
+    meta: { ability: ABILITIES.USERS },
   },
   {
     path: '/users/update/:id',
     name: 'users_update',
     component: () => import('pages/Users/UsersForm'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.USERS }
-  }
-]
+    meta: { ability: ABILITIES.USERS },
+  },
+];
 
 const strategies = [
   {
@@ -79,30 +79,37 @@ const strategies = [
     name: 'strategies',
     component: () => import('pages/Strategies/StrategiesList.vue'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.VIEW_STRATEGIES }
-  },
-  {
-    path: '/strategies/calc',
-    name: 'strategies_calc',
-    component: () => import('pages/Strategies/StrategiesCalc.vue'),
-    beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.CALC_STRATEGIES }
+    meta: { ability: ABILITIES.VIEW_STRATEGIES },
   },
   {
     path: '/strategies/create',
     name: 'strategy_create',
     component: () => import('pages/Strategies/StrategyForm.vue'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.REGISTER_STRATEGIES }
+    meta: { ability: ABILITIES.REGISTER_STRATEGIES },
   },
   {
     path: '/strategies/update/:id',
     name: 'strategy_update',
     component: () => import('pages/Strategies/StrategyForm.vue'),
     beforeEnter: checkLoggedUserAbility,
-    meta: { ability: ABILITIES.VIEW_STRATEGIES }
-  }
-]
+    meta: { ability: ABILITIES.VIEW_STRATEGIES },
+  },
+  {
+    path: '/strategies/calc',
+    name: 'strategies_calc',
+    component: () => import('pages/Strategies/StrategiesCalc.vue'),
+    beforeEnter: checkLoggedUserAbility,
+    meta: { ability: ABILITIES.CALC_STRATEGIES },
+  },
+  {
+    path: '/strategies/inference',
+    name: 'strategy_inference',
+    component: () => import('pages/Strategies/StrategyInference.vue'),
+    beforeEnter: checkLoggedUserAbility,
+    meta: { ability: ABILITIES.STRATEGY_INFERENCE },
+  },
+];
 
 const routes = [
   {
@@ -113,7 +120,7 @@ const routes = [
       {
         path: '',
         name: 'home',
-        redirect: '/system'
+        redirect: '/system',
       },
       {
         path: '/system',
@@ -123,29 +130,29 @@ const routes = [
       {
         path: 'dashboard',
         name: 'dashboard',
-        component: () => import('pages/Index')
+        component: () => import('pages/Index'),
       },
       ...permissions,
       ...users,
       ...strategies,
-    ]
+    ],
   },
   {
     path: '/login',
     name: 'login',
     beforeEnter: redirectToDashboardIfLogged,
-    component: () => import('pages/Login/PageLogin')
+    component: () => import('pages/Login/PageLogin'),
   },
   {
     path: '/reset-password/:token',
     name: 'reset_password',
     beforeEnter: redirectToDashboardIfLogged,
-    component: () => import('pages/Login/ResetPasswordPage')
+    component: () => import('pages/Login/ResetPasswordPage'),
   },
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/Error404')
+    component: () => import('pages/Error404'),
   },
-]
+];
 
-export default routes
+export default routes;
