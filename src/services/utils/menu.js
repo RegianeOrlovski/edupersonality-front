@@ -35,7 +35,7 @@ const generalItems = [
     ability: ABILITIES.CALC_STRATEGIES
   },
   {
-    label: 'Inferir estragégia',
+    label: 'Inferir estratégia',
     icon: 'o_fact_check',
     to: {
       name: 'strategy_inference'

@@ -120,7 +120,7 @@ export default {
   steps_for_application: "Etapas para aplicação",
   click_to_sort: "Clique para ordenar",
   test_your_strategy: "Teste sua estratégia",
-  fill_base_inputs: "Preencha os campos abaixo para ter como base em sua inferência",
+  main_info_to_inference: "Para inferir é preciso ter em mãos as seguintes informações:",
   failed_to_infer: "Falha ao inferir",
   clear_all: "Limpar tudo",
   // Dichotomy EI

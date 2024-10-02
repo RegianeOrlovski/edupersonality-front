@@ -1,124 +1,94 @@
 <template>
 
   <div>
+    <div ref="refTop"></div>
     <h4 class="q-mt-lg">{{ t('test_your_strategy') }}</h4>
 
     <div class="col-xs-12 q-mb-xs text-bold">
-      {{ t('fill_base_inputs') }}
+      {{ t('main_info_to_inference') }}
     </div>
 
     <q-separator/>
 
-    <div class="row q-col-gutter-md q-mt-xs">
-      <q-input
-        :label="t('focus')"
-        v-model="strategy.focus"
-        hide-bottom-space
-        class="col-xs-12"
-        dense
-        outlined
-        autogrow
-      />
+    <div class="row q-col-gutter-sm q-mt-xs">
+      <div class="text-bold">{{ t('focus') }}:</div>
       <div class="col-xs-12 text-grey-9">
         {{ t('focus_placeholder') }}
       </div>
-      <q-input
-        :label="t('characteristics')"
-        v-model="strategy.characteristics"
-        hide-bottom-space
-        dense
-        class="col-xs-12"
-        outlined
-        autogrow
-      />
+
+      <div class="text-bold">{{ t('characteristics') }}:</div>
       <div class="col-xs-12 text-grey-9">
         {{ t('characteristics_placeholder') }}
       </div>
-      <q-input
-        :label="t('activities')"
-        v-model="strategy.activities"
-        hide-bottom-space
-        dense
-        class="col-xs-12"
-        outlined
-        autogrow
-      />
+
+      <div class="text-bold">{{ t('activities') }}:</div>
       <div class="col-xs-12 text-grey-9">
         {{ t('activities_placeholder') }}
       </div>
-      <q-input
-        :label="t('applied_resources')"
-        v-model="strategy.applied_resources"
-        hide-bottom-space
-        dense
-        class="col-xs-12"
-        outlined
-        autogrow
-      />
+
+      <div class="text-bold">{{ t('applied_resources') }}:</div>
       <div class="col-xs-12 text-grey-9">
         {{ t('applied_resources_placeholder') }}
       </div>
     </div>
   </div>
 
-  <div v-if="strategy.focus && strategy.characteristics && strategy.activities && strategy.applied_resources">
-    <q-separator class="q-mt-xl"/>
+  <q-separator class="q-mt-xl"/>
 
-    <q-form
-      ref="refDichotomyAnswersForm"
-      @submit="infer()"
+  <q-form
+    ref="refDichotomyAnswersForm"
+    @submit="infer()"
+  >
+    <div
+      class="q-mt-md"
+      v-for="(dichotomy, dichotomyIndex) in dichotomyAnswersMapping"
+      :key="`dichotomy-${dichotomyIndex}`"
     >
+      <div class="text-h5 q-mb-md">{{ t(`${dichotomy.dichotomy}.dichotomy`) }}</div>
+
       <div
-        class="q-mt-md"
-        v-for="(dichotomy, dichotomyIndex) in dichotomyAnswersMapping"
-        :key="`dichotomy-${dichotomyIndex}`"
+        v-for="(category, categoryIndex) in dichotomy.categories"
+        :key="`category-${dichotomyIndex}-${categoryIndex}`"
+        class="row q-mt-md"
       >
-        <div class="text-h5 q-mb-md">{{ t(`${dichotomy.dichotomy}.dichotomy`) }}</div>
-
-        <div
-          v-for="(category, categoryIndex) in dichotomy.categories"
-          :key="`category-${dichotomyIndex}-${categoryIndex}`"
-          class="row q-mt-md"
-        >
-          <div class="col-12 q-mb-sm">
-            <span class="text-bold q-mt-md">{{ t(`${dichotomy.dichotomy}.category_${categoryIndex + 1}`) }}: </span>
-            <span class="text-italic">{{ t(`${dichotomy.dichotomy}.category_${categoryIndex + 1}_info`) }}</span>
-          </div>
-          <q-radio
-            v-for="(value, answerIndex) in category"
-            :key="`answer-${dichotomyIndex}-${categoryIndex}-${answerIndex}`"
-            class="col-12"
-            v-model="dichotomyAnswers[dichotomy.answerKey][categoryIndex]"
-            :val="value"
-            :label="t(`${dichotomy.dichotomy}.` + getAnswerLabelToTranslate(categoryIndex + 1, value))"
-            :disable="categoryIndex >= 2 && (!dichotomyAnswers[dichotomy.answerKey][0] || !dichotomyAnswers[dichotomy.answerKey][1])"
-          />
+        <div class="col-12 q-mb-sm">
+          <span class="text-bold q-mt-md">{{ t(`${dichotomy.dichotomy}.category_${categoryIndex + 1}`) }}: </span>
+          <span class="text-italic">{{ t(`${dichotomy.dichotomy}.category_${categoryIndex + 1}_info`) }}</span>
         </div>
+        <q-radio
+          v-for="(value, answerIndex) in category"
+          :key="`answer-${dichotomyIndex}-${categoryIndex}-${answerIndex}`"
+          class="col-12"
+          v-model="dichotomyAnswers[dichotomy.answerKey][categoryIndex]"
+          :val="value"
+          :label="t(`${dichotomy.dichotomy}.` + getAnswerLabelToTranslate(categoryIndex + 1, value))"
+          :disable="categoryIndex >= 2 && (!dichotomyAnswers[dichotomy.answerKey][0] || !dichotomyAnswers[dichotomy.answerKey][1])"
+        />
       </div>
+    </div>
 
-      <div class="q-mt-md text-right">
-        <q-btn-group>
-          <q-btn
-            outline
-            :label="t('clear_all')"
-            icon="refresh"
-            type="button"
-            color="secondary"
-            @click="reset()"
-          />
-          <q-btn
-            outline
-            :label="t('infer')"
-            icon="bolt"
-            type="submit"
-            color="primary"
-            :disable="inferring"
-            :loading="inferring"
-          />
-        </q-btn-group>
-      </div>
-    </q-form>
-  </div>
+    <div class="q-mt-md text-right">
+      <q-btn-group>
+        <q-btn
+          outline
+          :label="t('clear_all')"
+          icon="refresh"
+          type="button"
+          color="secondary"
+          @click="reset()"
+        />
+        <q-btn
+          outline
+          :label="t('infer')"
+          icon="bolt"
+          type="submit"
+          color="primary"
+          :disable="inferring"
+          :loading="inferring"
+        />
+      </q-btn-group>
+    </div>
+  </q-form>
 
   <div ref="refResults">
     <div v-if="null !== dichotomyAnswersPersonalitiesResult">
@@ -150,18 +120,12 @@ import { formatResponseError } from 'src/services/utils/error-formatter';
 import { t } from 'src/services/utils/i18n';
 import { inferDichotomyAnswer } from 'src/services/dichotomy_answers/dichotomy-answers-api';
 
+const refTop = ref(null);
 const refDichotomyAnswersForm = ref(null);
 const refResults = ref(null);
 
 const inferring = ref(false);
 const dichotomyAnswersPersonalitiesResult = ref(null);
-
-const strategy = ref({
-  focus: null,
-  characteristics: null,
-  activities: null,
-  applied_resources: null,
-});
 
 const dichotomyAnswers = ref({
   dichotomy_ei: [ null, null, null, null ],
@@ -232,12 +196,9 @@ function reset() {
 
   dichotomyAnswersPersonalitiesResult.value = null;
 
-  strategy.value = {
-    focus: null,
-    characteristics: null,
-    activities: null,
-    applied_resources: null,
-  };
+  setTimeout(() => {
+    refTop.value?.scrollIntoView({ behavior: 'smooth' });
+  }, 200);
 }
 
 function getAnswerLabelToTranslate(category, value) {
