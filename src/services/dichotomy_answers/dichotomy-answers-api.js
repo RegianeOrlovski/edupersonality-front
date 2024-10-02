@@ -25,3 +25,8 @@ export const updateDichotomyAnswer = async (id, dichotomyAnswer) => {
 export const destroyDichotomyAnswer = async id => {
   await destroy(`/dichotomy_answers/${id}`)
 }
+
+export const inferDichotomyAnswer = async dichotomyAnswer => {
+  const { data } = await post('/infer_dichotomy_answers', dichotomyAnswer)
+  return data
+}
