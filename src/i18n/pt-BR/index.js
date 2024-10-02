@@ -5,6 +5,7 @@ export default {
     register_strategies: 'Cadastrar estratégias de ensino',
     view_strategies: 'Visualizar estratégias de ensino',
     calc_strategies: 'Cálculo de estratégias',
+    strategy_inference: 'Inferência de estratégia',
   },
   user: {
     role: {
@@ -97,7 +98,7 @@ export default {
   activities: "Atividades",
   activities_placeholder: "Atividades que compõem a estratégia de ensino",
   applied_resources: "Recursos aplicados",
-  applied_resources_placeholder: "vídeos, leituras, simulações, pesquisas, teorias...",
+  applied_resources_placeholder: "Vídeos, leituras, simulações, pesquisas, teorias...",
   reference: "Referência bibliográfica",
   continue: "Proseguir",
   infer: "Inferir",
@@ -117,6 +118,11 @@ export default {
   image: "Imagem",
   define_image: "Definir imagem",
   steps_for_application: "Etapas para aplicação",
+  click_to_sort: "Clique para ordenar",
+  test_your_strategy: "Teste sua estratégia",
+  fill_base_inputs: "Preencha os campos abaixo para ter como base em sua inferência",
+  failed_to_infer: "Falha ao inferir",
+  clear_all: "Limpar tudo",
   // Dichotomy EI
   ei: {
     dichotomy: "Dicotomias Extroversão (E) e Introversão (I)",

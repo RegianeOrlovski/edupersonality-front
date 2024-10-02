@@ -20,7 +20,7 @@ const generalItems = [
   },
   {
     label: 'Estratégias de ensino',
-    icon: 'o_tune',
+    icon: 'o_history_edu',
     to: {
       name: 'strategies'
     },
@@ -33,6 +33,14 @@ const generalItems = [
       name: 'strategies_calc'
     },
     ability: ABILITIES.CALC_STRATEGIES
+  },
+  {
+    label: 'Inferir estragégia',
+    icon: 'o_fact_check',
+    to: {
+      name: 'strategy_inference'
+    },
+    ability: ABILITIES.STRATEGY_INFERENCE
   },
   {
     label: 'Acesso ao Sistema',
